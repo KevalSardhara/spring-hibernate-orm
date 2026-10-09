@@ -32,13 +32,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(studentList);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getStudentById(@PathVariable Long id) {
-        studentService.getStudentById(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Student get student successfully");
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentService.getStudentById(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<String> updateStudent(@RequestBody Student student, @PathVariable Long id) {
         studentService.updateStudent(student, id);
         return ResponseEntity.status(HttpStatus.CREATED).body("Student update student successfully");

@@ -2,6 +2,7 @@ package com.hibernate.javaSpringHibernate.service;
 
 import com.hibernate.javaSpringHibernate.model.Student;
 import com.hibernate.javaSpringHibernate.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,27 +18,42 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    @Transactional
     public void createStudent(Student student) {
         studentRepository.save(student);
     }
 
     public List<Student> getAllStudents() {
-        studentRepository.findAll();
-        return null;
+        return studentRepository.findAll();
     }
 
-    public void getStudentById(Long id) {
-        studentRepository.findById(id);
+    @Transactional
+    public Student getStudentById(Long id) {
+        Student student = studentRepository.findById(id);
+        if (student == null) {
+            throw new RuntimeException("Student not found!");
+        }
+        return student;
     }
 
+    @Transactional
     public void updateStudent(Student student, Long id) {
-        studentRepository.update(student, id);
+        Student getStudent = studentRepository.findById(id);
+
+        if(getStudent == null) {
+            throw new RuntimeException("Student not found");
+        }
+        getStudent.setName(student.getName());
+        getStudent.setAge(student.getAge());
+        getStudent.setEmail(student.getEmail());
     }
 
+    @Transactional
     public void deleteStudent(Long id) {
-        studentRepository.delete(id);
+        Student student = studentRepository.findById(id);
+        if(student == null) {
+            throw new RuntimeException("Student not found");
+        }
+        studentRepository.delete(student);
     }
-
-
-
 }
